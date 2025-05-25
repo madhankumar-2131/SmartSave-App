@@ -1,0 +1,81 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f1f3f6;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+header {
+    background-color: #0a3d62;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile img {
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+main {
+    margin-top: 20px;
+}
+
+.balance,
+.transfer,
+.transactions {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.amount {
+    font-size: 2rem;
+    color: green;
+    margin-top: 10px;
+}
+
+form input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+form button {
+    background-color: #0a3d62;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.transactions ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.transactions li {
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    font-size: 0.9rem;
+    color: #555;
+}

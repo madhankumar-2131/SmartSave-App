@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🏦 SmartSave App </title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>🏦 SmartSave </h1>
+      <div class="profile">
+        <span>Welcome, Madhan </span>
+      </div>
+    </header>
+
+    <main>
+      <section class="balance">
+        <h2>Account Balance</h2>
+        <p class="amount">Loading...</p>
+      </section>
+
+      <section class="transfer">
+        <h2>Transfer Money</h2>
+        <form id="transferForm">
+          <input type="text" placeholder="Recipient Name" required />
+          <input type="number" placeholder="Amount (INR)" required min="1" />
+          <button type="submit">Transfer</button>
+        </form>
+      </section>
+
+      <section class="credit">
+        <h2>Add Money</h2>
+        <form id="creditForm">
+          <input type="number" placeholder="Amount (INR)" required min="1" />
+          <button type="submit">Add Money</button>
+        </form>
+      </section>
+
+      <section class="transactions">
+        <h2>Recent Transactions</h2>
+        <ul id="txnList">
+          <li>Loading transactions...</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2025 MyBank. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    const userId = 1;
+
+    // Fetch and show balance
+    function loadBalance() {
+      fetch(`http://localhost:5000/balance/${userId}`)
+        .then(res => res.json())
+        .then(data => {
+          document.querySelector('.amount').innerText = '₹ ' + data.balance.toFixed(2);
+        });
+    }
+
+    // Fetch and show transactions
+    function loadTransactions() {
+      fetch(`http://localhost:5000/transactions/${userId}`)
+        .then(res => res.json())
+        .then(data => {
+          const list = document.getElementById('txnList');
+          list.innerHTML = '';
+          if (data.length === 0) {
+            list.innerHTML = '<li>No transactions found</li>';
+            return;
+          }
+          data.forEach(txn => {
+            const li = document.createElement('li');
+            const sign = txn.type === 'credit' ? '+' : '-';
+            li.textContent = `${sign} ₹${txn.amount} — ${txn.type} on ${txn.timestamp}`;
+            list.appendChild(li);
+          });
+        });
+    }
+
+    // Handle transfer form submit
+    document.getElementById('transferForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const amount = e.target[1].value;
+      fetch('http://localhost:5000/transfer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: userId, amount })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) alert(data.error);
+          else alert(data.message);
+          loadBalance();
+          loadTransactions();
+        });
+      e.target.reset();
+    });
+
+    // Handle credit form submit
+    document.getElementById('creditForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const amount = e.target[0].value;
+      fetch('http://localhost:5000/credit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: userId, amount })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) alert(data.error);
+          else alert(data.message);
+          loadBalance();
+          loadTransactions();
+        });
+      e.target.reset();
+    });
+
+    // Initial load
+    loadBalance();
+    loadTransactions();
+  </script>
+</body>
+
+</html>
